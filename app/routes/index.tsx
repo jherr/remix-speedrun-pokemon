@@ -1,10 +1,18 @@
 import type { MetaFunction, LoaderFunction } from "remix";
-import { useMemo } from "react";
-import { useLoaderData, json, Link, useFetcher } from "remix";
+import { useLoaderData, json, Link, Form } from "remix";
 
 import pokemon, { Pokemon } from "../../lib/pokemon";
 
-export let loader: LoaderFunction = () => {
+export let loader: LoaderFunction = ({ request }) => {
+  const url = new URL(request.url);
+
+  if (url.searchParams.has("q")) {
+    const q = (url.searchParams.get("q") ?? "").toLowerCase();
+    return json(
+      pokemon.filter(({ name }) => name.toLowerCase().includes(q)).slice(0, 10)
+    );
+  }
+
   return pokemon.slice(0, 10);
 };
 
@@ -17,18 +25,11 @@ export let meta: MetaFunction = () => {
 
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
-  let data = useLoaderData<Pokemon[]>();
-  const pokemon = useFetcher<Pokemon[]>();
-
-  const pokemonList = useMemo(() => pokemon.data || data, [data, pokemon.data]);
+  let pokemonList = useLoaderData<Pokemon[]>();
 
   return (
     <div>
-      <pokemon.Form
-        method="get"
-        className="mb-10 flex"
-        action="/pokemon-search"
-      >
+      <Form method="get" className="mb-10 flex">
         <input
           type="text"
           name="q"
@@ -41,7 +42,7 @@ export default function Index() {
         >
           Search
         </button>
-      </pokemon.Form>
+      </Form>
 
       <ul
         role="list"
