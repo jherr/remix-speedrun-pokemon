@@ -71,8 +71,8 @@ function Layout({ children }: React.PropsWithChildren<{}>) {
       <div>
         <div>
           <nav className="sm:hidden" aria-label="Back">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="flex items-center text-sm font-medium text-gray-400 hover:text-gray-200"
             >
               <ChevronLeftIcon
@@ -80,7 +80,7 @@ function Layout({ children }: React.PropsWithChildren<{}>) {
                 aria-hidden="true"
               />
               Back
-            </a>
+            </Link>
           </nav>
           <nav className="hidden sm:flex" aria-label="Breadcrumb">
             <ol role="list" className="flex items-center space-x-4">
