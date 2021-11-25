@@ -6,15 +6,10 @@ import pokemon, { Pokemon } from "../../lib/pokemon";
 
 export let loader: LoaderFunction = ({ request }) => {
   const url = new URL(request.url);
-
-  if (url.searchParams.has("q")) {
-    const q = (url.searchParams.get("q") ?? "").toLowerCase();
-    return json(
-      pokemon.filter(({ name }) => name.toLowerCase().includes(q)).slice(0, 10)
-    );
-  }
-
-  return pokemon.slice(0, 10);
+  const q = (url.searchParams.get("q") ?? "").toLowerCase();
+  return json(
+    pokemon.filter(({ name }) => name.toLowerCase().includes(q)).slice(0, 10)
+  );
 };
 
 export let meta: MetaFunction = () => {

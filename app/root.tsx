@@ -9,7 +9,7 @@ import {
   ScrollRestoration,
   useCatch,
   useLocation,
-  useParams,
+  useMatches,
 } from "remix";
 import type { LinksFunction } from "remix";
 
@@ -64,7 +64,8 @@ function Document({
 }
 
 function Layout({ children }: React.PropsWithChildren<{}>) {
-  const { name } = useParams();
+  const matches = useMatches();
+  const lastMatch = matches.slice(-1)[0];
 
   return (
     <div className="mx-auto max-w-7xl">
@@ -88,28 +89,28 @@ function Layout({ children }: React.PropsWithChildren<{}>) {
                 <div className="flex">
                   <Link
                     to="/"
-                    className="text-gray-400 hover:text-gray-500 text-sm font-medium text-gray-400 hover:text-gray-200"
+                    className="text-sm font-medium text-gray-400 hover:text-gray-200"
                   >
                     Home
                   </Link>
                 </div>
               </li>
-              {name && (
-                <li>
-                  <div className="flex">
-                    <div className="text-gray-400 hover:text-gray-500 text-sm font-medium text-gray-400 hover:text-gray-200">
-                      {name}
+              {matches
+                .filter((match) => match.handle && match.handle.breadcrumb)
+                .map((match, index) => (
+                  <li key={index}>
+                    <div className="flex">
+                      {match.handle.breadcrumb(match.params)}
                     </div>
-                  </div>
-                </li>
-              )}
+                  </li>
+                ))}
             </ol>
           </nav>
         </div>
         <div className="mt-2 md:flex md:items-center md:justify-between">
           <div className="flex-1 min-w-0">
             <h2 className="text-2xl font-bold leading-7 text-black sm:text-3xl sm:truncate">
-              {name ?? "Pokemon"}
+              {lastMatch?.handle?.title?.(lastMatch.params) ?? "Pokemon"}
             </h2>
           </div>
         </div>

@@ -1,8 +1,20 @@
-import { useLoaderData } from "remix";
+import { useLoaderData, Link } from "remix";
 import { useMemo } from "react";
 import type { LoaderFunction, MetaFunction } from "remix";
 
 import pokemon, { Pokemon } from "../../../lib/pokemon";
+
+export let handle = {
+  title: (params: { name: string }) => params.name,
+  breadcrumb: (params: { name: string }) => (
+    <Link
+      to={`/pokemon/${params.name}`}
+      className="text-sm font-medium text-gray-400 hover:text-gray-200"
+    >
+      {params.name}
+    </Link>
+  ),
+};
 
 export const loader: LoaderFunction = ({ params }) => {
   return pokemon.find(
