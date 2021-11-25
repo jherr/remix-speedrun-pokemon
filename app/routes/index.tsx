@@ -1,5 +1,6 @@
 import type { MetaFunction, LoaderFunction } from "remix";
-import { useLoaderData, json, Link, Form } from "remix";
+import { useState } from "react";
+import { useLoaderData, json, Link, Form, useSearchParams } from "remix";
 
 import pokemon, { Pokemon } from "../../lib/pokemon";
 
@@ -23,15 +24,17 @@ export let meta: MetaFunction = () => {
   };
 };
 
-// https://remix.run/guides/routing#index-routes
 export default function Index() {
   let pokemonList = useLoaderData<Pokemon[]>();
+  const [search, setSearch] = useState(useSearchParams()[0].get("q") ?? "");
 
   return (
     <div>
       <Form method="get" className="mb-10 flex">
         <input
           type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           name="q"
           className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg border-gray-300 px-4 rounded-full"
           placeholder="Pokemon"
